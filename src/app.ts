@@ -1,21 +1,18 @@
 import "dotenv/config";
 import express, { NextFunction, Request, Response } from "express";
-import NoteModel from "./models/note";
+import notesRoute from "./routes/notesRoute";
+import morgan from "morgan";
 
 const app = express();
 
-app.get("/", async (req, res, next) => {
-  try {
-    throw Error("Bazinga!");
-    const notes = await NoteModel.find().exec();
-    res.status(200).json(notes);
-  } catch (error) {
-    next(error);
-  }
-});
+app.use(morgan("dev"));
+
+app.use(express.json());
+
+app.use("/api/notes", notesRoute);
 
 app.use((req, res, next) => {
-  next(Error("Enpoint not found"));
+  next(Error("Endpoint not found"));
 });
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
